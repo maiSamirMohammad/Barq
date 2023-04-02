@@ -6,6 +6,10 @@ plugins {
 android {
     namespace 'iti.mobile.barq'
     compileSdk 33
+//view binding added
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "iti.mobile.barq"
