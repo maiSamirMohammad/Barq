@@ -53,7 +53,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(requireContext())
-        Log.i("TAG=======", "onViewCreated: ")
         getLastLocation()
     }
 
