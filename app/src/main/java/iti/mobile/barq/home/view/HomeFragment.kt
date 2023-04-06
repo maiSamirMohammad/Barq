@@ -1,4 +1,4 @@
-package iti.mobile.barq
+package iti.mobile.barq.home.view
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import iti.mobile.barq.R
 
 const val PERMISSION_ID=77
 class HomeFragment : Fragment() {
@@ -27,7 +28,8 @@ class HomeFragment : Fragment() {
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
             val currentLocation: Location? =p0.lastLocation
-            Log.i("TAG", "lat${currentLocation?.latitude.toString()} .. long${currentLocation?.longitude.toString()}")
+
+            Log.i("TAG", "lat  ${currentLocation?.latitude.toString()} .. long  ${currentLocation?.longitude.toString()}")
 
 
         }
@@ -51,12 +53,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(requireContext())
-    }
-
-    override fun onResume() {
-        super.onResume()
+        Log.i("TAG=======", "onViewCreated: ")
         getLastLocation()
     }
+
+
 
     private fun checkPermissions():Boolean{
         return ActivityCompat.checkSelfPermission(requireContext(),

@@ -3,7 +3,11 @@ package iti.mobile.barq
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import iti.mobile.barq.alert.view.AlertFragment
 import iti.mobile.barq.databinding.ActivityMainBinding
+import iti.mobile.barq.favorite.view.FavoriteFragment
+import iti.mobile.barq.home.view.HomeFragment
+import iti.mobile.barq.settings.view.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
