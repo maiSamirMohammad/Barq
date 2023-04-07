@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Barq</string>
-    <string name="ingredient_img">https://openweathermap.org/img/wn/%s@2x.png</string>
+    <string name="weather_icon_url">https://openweathermap.org/img/wn/%s@2x.png</string>
 
 </resources>

@@ -26,7 +26,7 @@ data class Current (
     val windDeg: Long,
     val windGust: Double,
     val weather: List<Weather>,
-    val pop: Long? = null
+    val pop: Double? = null
 )
 
 data class Weather (

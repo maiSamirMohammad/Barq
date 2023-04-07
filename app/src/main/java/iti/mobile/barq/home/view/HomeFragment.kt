@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import iti.mobile.barq.R
@@ -103,11 +104,32 @@ class HomeFragment : Fragment() {
                                 }
                                 is APIState.Success ->{
                                     binding.progressBar.visibility= View.GONE
-//                                    allProductsAdapter.setList(apiResult.data)
-//                                    allProductsAdapter.notifyDataSetChanged()
+
+                                   val weatherIconUrl= resources.getString(
+                                        R.string.weather_icon_url,
+                                        apiResult.data.current.weather[0].icon
+                                    )
+//                                    weatherIconUrl .let {
+//                                        binding.iconWeather?.load(weatherIconUrl) {
+//                                            placeholder(R.drawable.loading_animation)
+//                                            error(R.drawable.ic_broken_image)
+//                                        }
+//                                    }
+
+                                    context?.let {
+                                        Glide
+                                            .with(it)
+                                            .load(weatherIconUrl)
+                                            .override(400, 400)
+                                            .placeholder(R.drawable.loading_animation)
+                                            .error(R.drawable.ic_broken_image)
+                                           // .centerCrop() // or use fitcenter
+                                            .into(binding.iconWeather)
+                                    }
                                 }
                                 is APIState.Failure ->{
                                     binding.progressBar.visibility= View.GONE
+                                    Log.e("TAG", "error==========:${apiResult.msg.message} ")
                                     Snackbar.make(activity?.window?.decorView!!.rootView,
                                         "Try another time as ${apiResult.msg.message}",
                                         Snackbar.LENGTH_LONG)
