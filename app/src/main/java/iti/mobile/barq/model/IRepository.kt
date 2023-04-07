@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 interface IRepository {
     //from network
     suspend fun getCurrentWeather(
-        lat: String?,
-        lon: String?,
-        lang: String = Constants.LANGUAGE_ENGLISH,
-        units: String = Constants.UNITS_DEFAULT
+        latitude: String,
+        longitude: String,
+        language: String ,
+        unitOfMeasurement: String
     ): Flow<WeatherForecast>
 }

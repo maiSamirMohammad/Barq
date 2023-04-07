@@ -1,19 +1,22 @@
 package iti.mobile.barq.network
-
 import iti.mobile.barq.model.WeatherForecast
 
 class RemoteSource private constructor():IRemoteSource {
-    val weatherForecastService:WeatherForecastService by lazy {
+    private val weatherForecastService:WeatherForecastService by lazy {
         RetrofitHelper.getInstance().create(WeatherForecastService::class.java)
     }
     override suspend fun getCurrentWeather(
-        lat: String?,
-        lon: String?,
-        appId: String,
-        lang: String,
-        units: String
+        latitude: String,
+        longitude: String,
+        language: String,
+        unitOfMeasurement: String
     ): WeatherForecast {
-        return weatherForecastService.getCurrentWeather(lat,lon,appId,lang,units)
+        return weatherForecastService.getCurrentWeather(
+            latitude=latitude,
+            longitude=longitude,
+            language=language,
+            unitOfMeasurement=unitOfMeasurement
+        )
     }
 
 

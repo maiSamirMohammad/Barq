@@ -22,13 +22,19 @@ class Repository private constructor(var localSource:ILocalSource,var remoteSour
 
     //from network
     override suspend fun getCurrentWeather(
-        lat: String?,
-        lon: String?,
-        lang: String,
-        units: String
+        latitude: String,
+        longitude: String,
+        language: String ,
+        unitOfMeasurement: String
     ): Flow<WeatherForecast> {
         return flow {
-            emit(remoteSource.getCurrentWeather( lat, lon, lang =lang, units = units))
+            emit(
+                remoteSource.getCurrentWeather(
+                latitude=latitude,
+                longitude=longitude,
+                language=language ,
+                unitOfMeasurement=unitOfMeasurement)
+            )
         }
     }
 

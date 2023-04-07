@@ -17,18 +17,21 @@ class HomeViewModel(  private val _irepo: IRepository): ViewModel() {
     private var _currentWeatherForecast= MutableStateFlow<APIState>(APIState.Loading)
     val currentWeatherForecast= _currentWeatherForecast.asStateFlow()
 
-    init {
-
-    }
 
     fun getCurrentWeather(
-        lat: String?, lon: String?, lang: String = Constants.LANGUAGE_ENGLISH, units: String = Constants.UNITS_DEFAULT
+        latitude: String,
+        longitude: String,
+        language: String,
+        unitOfMeasurement: String
     )
     {
         viewModelScope.launch(Dispatchers.IO){
 
             _irepo.getCurrentWeather(
-                lat, lon, lang = lang, units = units
+                latitude=latitude,
+                longitude=longitude,
+                language=language,
+                unitOfMeasurement=unitOfMeasurement
             ).catch { e->
                 _currentWeatherForecast.value=APIState.Failure(e)
             }.collectLatest{ weatherForecast->

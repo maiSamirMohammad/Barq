@@ -7,9 +7,10 @@ import retrofit2.http.Query
 
 interface WeatherForecastService {
     @GET("onecall?")
-    suspend fun getCurrentWeather(@Query("lat") lat: String?,
-                                  @Query("lon") lon: String?,
+    suspend fun getCurrentWeather(@Query("lat") latitude: String,
+                                  @Query("lon") longitude: String,
                                   @Query("appid") appId:String= Constants.APP_ID,
-                                  @Query("lang") lang:String,
-                                  @Query("units") units:String ): WeatherForecast
+                                  @Query("lang") language:String,
+                                  @Query("units") unitOfMeasurement:String
+    ): WeatherForecast
 }
