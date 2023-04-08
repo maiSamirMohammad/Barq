@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="kotlin_purple1">#7350F2</color>
+    <color name="kotlin_purple1_transparent">#407350F2</color>
+    <color name="kotlin_purple2">#9538F2</color>
+    <color name="dark_purple">#430E59</color>
+
+
+
 </resources>

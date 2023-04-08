@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background2">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
+        tools:context=".home.view.HomeFragment">
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_95"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <TextView
+            android:id="@+id/region"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/light_background"
+            android:fontFamily="@font/itim_regular"
+            android:padding="5dp"
+            android:layout_margin="16dp"
+            android:text="unknown"
+            android:textColor="@color/dark_purple"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_95"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_card"
+            android:layout_width="0dp"
+            android:layout_height="280dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/light_background"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_95"
+            app:layout_constraintStart_toEndOf="@id/guideline_start_5"
+            app:layout_constraintTop_toBottomOf="@id/region">
+
+
+            <ImageView
+                android:id="@+id/icon_weather"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_temperature"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/ic_yellow_flash" />
+
+            <TextView
+                android:id="@+id/tv_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/itim_regular"
+                android:text="_K"
+                android:textColor="@color/dark_purple"
+                android:textSize="50sp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/itim_regular"
+                android:textColor="@color/dark_purple"
+                android:textSize="22sp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_temperature"
+                tools:text="description" />
+
+            <TextView
+                android:id="@+id/tv_date_and_time"
+                android:layout_width="169dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/itim_regular"
+                android:gravity="center"
+                android:textColor="@color/dark_purple"
+                android:textSize="16sp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_description"
+                tools:text="day" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_hourly_forecast"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_card" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_daily_forecast"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_95"
+            app:layout_constraintStart_toEndOf="@id/guideline_start_5"
+            app:layout_constraintTop_toBottomOf="@+id/rv_hourly_forecast"
+            tools:itemCount="7" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="16dp"
+            android:background="@drawable/light_background"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_95"
+            app:layout_constraintStart_toEndOf="@id/guideline_start_5"
+            app:layout_constraintTop_toBottomOf="@id/rv_daily_forecast">
+
+            <TextView
+                android:id="@+id/humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Humidity"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+
+                />
+
+            <ImageView
+                android:id="@+id/ic_humidity"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/humidity"
+                app:srcCompat="@drawable/humidity" />
+            <TextView
+                android:id="@+id/humidity_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Humidity"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ic_humidity"
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+
+                />
+            <TextView
+                android:id="@+id/wind_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wind speed"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/humidity_value"
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+
+                />
+
+            <ImageView
+                android:id="@+id/ic_wind"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/wind_speed"
+                app:srcCompat="@drawable/wind" />
+            <TextView
+                android:id="@+id/wind_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="wind"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ic_wind"
+                app:layout_constraintEnd_toStartOf="@id/guideline_center"
+
+                />
+            <TextView
+                android:id="@+id/pressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pressure"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="@id/guideline_center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                />
+
+            <ImageView
+                android:id="@+id/ic_pressure"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_center"
+                app:layout_constraintTop_toBottomOf="@id/pressure"
+                app:srcCompat="@drawable/pressure" />
+            <TextView
+                android:id="@+id/pressure_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="pressure"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_center"
+                app:layout_constraintTop_toBottomOf="@id/ic_pressure"
+                />
+            <TextView
+                android:id="@+id/clouds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clouds"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintStart_toStartOf="@id/guideline_center"
+                app:layout_constraintTop_toBottomOf="@id/pressure_value"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                />
+
+            <ImageView
+                android:id="@+id/ic_clouds"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_center"
+                app:layout_constraintTop_toBottomOf="@id/clouds"
+                app:srcCompat="@drawable/clouds" />
+            <TextView
+                android:id="@+id/clouds_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="clouds"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/itim_regular"
+                android:textSize="16dp"
+                android:textColor="@color/dark_purple"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline_center"
+                app:layout_constraintTop_toBottomOf="@id/ic_clouds"
+                />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
