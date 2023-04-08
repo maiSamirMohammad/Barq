@@ -44,7 +44,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_end_95"
         android:layout_width="wrap_content"
@@ -52,98 +60,91 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
+    <TextView
+        android:id="@+id/region"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/light_background"
+        android:fontFamily="@font/itim_regular"
+        android:padding="5dp"
+        android:text="unknown"
+        android:textColor="@color/dark_purple"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/guideline_top_10"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_95"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_5"
+        app:layout_constraintTop_toBottomOf="@id/guideline_top_5" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/light_background"
         app:layout_constraintBottom_toTopOf="@id/guideline_top_40"
         app:layout_constraintEnd_toStartOf="@id/guideline_end_95"
         app:layout_constraintStart_toEndOf="@id/guideline_start_5"
-        app:layout_constraintTop_toBottomOf="@id/guideline_top_5">
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-             android:layout_height="250dp"
-             android:layout_width="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/guideline_top_10">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="5dp"
-                android:layout_margin="8dp">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/kotlin_purple1_transparent"
-                    android:orientation="vertical"
-                    android:paddingTop="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_Temperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="20C"
-                        android:textColor="@color/dark_purple"
-                        android:textSize="60sp" />
-
-                    <TextView
-                        android:id="@+id/tv_day"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="day"
-                        android:textColor="@color/dark_purple"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tv_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="date"
-                        android:textColor="@color/dark_purple"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tvWeather"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="12dp"
-                        android:text="description"
-                        android:textColor="@color/dark_purple"
-                        android:textSize="24sp" />
-
-
-                </LinearLayout>
-
-
-            </androidx.cardview.widget.CardView>
-
-        </RelativeLayout>
 
         <ImageView
             android:id="@+id/icon_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="-50dp"
-            app:layout_constraintTop_toBottomOf="@id/relativeLayout"
-
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_temperature"
             tools:srcCompat="@drawable/ic_yellow_flash" />
 
+        <TextView
+            android:id="@+id/tv_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="_C"
+            android:textColor="@color/dark_purple"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/dark_purple"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_temperature"
+            tools:text="description" />
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/dark_purple"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            tools:text="day" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/dark_purple"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            tools:text="date" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

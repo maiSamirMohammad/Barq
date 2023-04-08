@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -104,17 +105,19 @@ class HomeFragment : Fragment() {
                                 }
                                 is APIState.Success ->{
                                     binding.progressBar.visibility= View.GONE
+                                    //get user address
+                                    val geoCoder= Geocoder(requireContext())
+                                    val currentArea= geoCoder.getFromLocation(apiResult.data.lat,apiResult.data.lon,1)
+                                    apiResult.data.countryName=
+                                        (currentArea?.get(0)?.countryName +", "+ currentArea?.get(0)?.adminArea)
+                                    binding.region.text=apiResult.data.countryName
+
 
                                    val weatherIconUrl= resources.getString(
                                         R.string.weather_icon_url,
                                         apiResult.data.current.weather[0].icon
                                     )
-//                                    weatherIconUrl .let {
-//                                        binding.iconWeather?.load(weatherIconUrl) {
-//                                            placeholder(R.drawable.loading_animation)
-//                                            error(R.drawable.ic_broken_image)
-//                                        }
-//                                    }
+
 
                                     context?.let {
                                         Glide

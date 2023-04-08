@@ -7,7 +7,8 @@ data class WeatherForecast (
     val timezoneOffset: Long,
     val current: Current,
     val hourly: List<Current>,
-    val daily: List<Daily>
+    val daily: List<Daily>,
+    var countryName:String?=null
 )
 
 data class Current (
