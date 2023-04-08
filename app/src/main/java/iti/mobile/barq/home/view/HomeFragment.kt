@@ -129,6 +129,20 @@ class HomeFragment : Fragment() {
                                            // .centerCrop() // or use fitcenter
                                             .into(binding.iconWeather)
                                     }
+                                    binding.tvTemperature.text = resources.getString(
+                                        R.string.temperature_kelvin,
+                                        apiResult.data.current.temp.toString()
+                                    )
+
+                                    binding.tvDescription?.text =
+                                        apiResult.data.current.weather[0].description?.toString() ?: resources.getString(
+                                            R.string.feels_like,
+                                            apiResult.data.current.feelsLike.toString()
+                                        )
+
+                                    binding?.tvDay?.text = (apiResult.data.current.dt.toString())
+                                    Log.i("TAG", "description:${apiResult.data.current.weather[0].description?.toString() ?: "nullll"} ")
+                                    Log.i("TAG", "description:${apiResult.data.current.feelsLike.toString() ?: "nOOOOllll"} ")
                                 }
                                 is APIState.Failure ->{
                                     binding.progressBar.visibility= View.GONE

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Barq</string>
     <string name="weather_icon_url">https://openweathermap.org/img/wn/%s@2x.png</string>
+    <string name="temperature_kelvin">%s K</string>
+    <string name="feels_like">Feels like %s K</string>
 
 </resources>
