@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.api.load
 import iti.mobile.barq.R
 import iti.mobile.barq.databinding.WeatherHourlyItemBinding
 import iti.mobile.barq.model.Current
@@ -24,8 +24,14 @@ class HourlyAdapter(var hourlyList:List<Current>, var context: Context):
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var current=hourlyList[position]
 
-        Glide.with(context).load(context.resources.getString(R.string.weather_icon_url,current.weather[0].icon.toString()))
-            .into(holder.binding.iconTemp)
+
+        val imgUrl = context.resources.getString(R.string.weather_icon_url,current.weather[0].icon.toString())
+        imgUrl.let {
+            holder.binding.iconTemp.load(imgUrl) {
+                placeholder(R.drawable.loading_animation)
+                error(R.drawable.ic_broken_image)
+            }
+        }
 
         val date = Date(current.dt * 1000L)
         val sdf = SimpleDateFormat("HH:mm a")

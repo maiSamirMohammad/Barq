@@ -20,7 +20,9 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import iti.mobile.barq.R
@@ -121,15 +123,14 @@ class HomeFragment : Fragment() {
                                     )
 
 
-                                    context?.let {
-                                        Glide
-                                            .with(it)
-                                            .load(weatherIconUrl)
-                                            .override(400, 400)
-                                            .placeholder(R.drawable.loading_animation)
-                                            .error(R.drawable.ic_broken_image)
-                                           // .centerCrop() // or use fitcenter
-                                            .into(binding.iconWeather)
+
+                                    val imgUrl = context?.resources?.getString(R.string.weather_icon_url,
+                                        apiResult.data.current.weather[0].icon?.toString())
+                                    imgUrl.let {
+                                        binding.iconWeather.load(imgUrl) {
+                                            placeholder(R.drawable.loading_animation)
+                                            error(R.drawable.ic_broken_image)
+                                        }
                                     }
                                     binding.tvTemperature.text = resources.getString(
                                         R.string.temperature_kelvin,
@@ -148,9 +149,15 @@ class HomeFragment : Fragment() {
                                     val simpleDateAndTimeFormat = SimpleDateFormat("dd MMM yyyy HH:mm a")
                                     val convertedDateAndTime=simpleDateAndTimeFormat.format(dateAndTime*1000)
                                     binding.tvDateAndTime.text =convertedDateAndTime
+                                    binding.rvHourlyForecast.adapter = HourlyAdapter(apiResult.data.hourly, requireContext())
+                                    binding.rvDailyForecast.adapter = DailyAdapter(apiResult.data.daily, requireContext())
+                                    binding.rvDailyForecast.hasFixedSize()
 
-                                    binding.rvHourlyForecast.adapter =
-                                        HourlyAdapter(apiResult.data.hourly, requireContext())
+                                    binding.humidityValue.text =  apiResult.data.current.humidity.toString() + "%"
+                                    binding.cloudsValue.text =  apiResult.data.current.clouds.toString() + "%"
+
+                                    binding.windValue.text = apiResult.data.current.wind_speed.toString() + " metre/sec"
+                                    binding.pressureValue.text = apiResult.data.current.pressure.toString() + " hPa"
 
 
 

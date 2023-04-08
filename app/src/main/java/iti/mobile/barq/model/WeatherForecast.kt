@@ -23,7 +23,7 @@ data class Current (
     val uvi: Double,
     val clouds: Long,
     val visibility: Long,
-    val windSpeed: Double,
+    val wind_speed: Double,
     val windDeg: Long,
     val windGust: Double,
     val weather: List<Weather>,
