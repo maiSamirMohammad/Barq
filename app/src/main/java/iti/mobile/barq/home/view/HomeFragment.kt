@@ -12,12 +12,12 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -38,6 +38,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val PERMISSION_ID=77
 class HomeFragment : Fragment() {
@@ -135,14 +137,24 @@ class HomeFragment : Fragment() {
                                     )
 
                                     binding.tvDescription?.text =
-                                        apiResult.data.current.weather[0].description?.toString() ?: resources.getString(
+                                        apiResult.data.current.weather[0].description ?: resources.getString(
                                             R.string.feels_like,
-                                            apiResult.data.current.feelsLike.toString()
+                                            apiResult.data.current.feels_like.toString()
                                         )
 
-                                    binding?.tvDay?.text = (apiResult.data.current.dt.toString())
-                                    Log.i("TAG", "description:${apiResult.data.current.weather[0].description?.toString() ?: "nullll"} ")
-                                    Log.i("TAG", "description:${apiResult.data.current.feelsLike.toString() ?: "nOOOOllll"} ")
+
+
+                                    val dateAndTime: Long = apiResult.data.current.dt.toString().toLong()
+                                    val simpleDateAndTimeFormat = SimpleDateFormat("dd MMM yyyy HH:mm a")
+                                    val convertedDateAndTime=simpleDateAndTimeFormat.format(dateAndTime*1000)
+                                    binding.tvDateAndTime.text =convertedDateAndTime
+
+                                    binding.rvHourlyForecast.adapter =
+                                        HourlyAdapter(apiResult.data.hourly, requireContext())
+
+
+
+
                                 }
                                 is APIState.Failure ->{
                                     binding.progressBar.visibility= View.GONE

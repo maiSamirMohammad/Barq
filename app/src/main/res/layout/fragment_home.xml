@@ -76,6 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline_top_5" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/light_background"
@@ -99,9 +100,11 @@
             android:id="@+id/tv_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="_C"
+            android:text="_K"
             android:textColor="@color/dark_purple"
-            android:textSize="60sp"
+            android:textSize="50sp"
+            android:fontFamily="@font/itim_regular"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,36 +118,41 @@
             android:layout_marginTop="12dp"
             android:textColor="@color/dark_purple"
             android:textSize="22sp"
+            android:fontFamily="@font/itim_regular"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_temperature"
             tools:text="description" />
 
         <TextView
-            android:id="@+id/tv_day"
+            android:id="@+id/tv_date_and_time"
             android:layout_width="169dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/dark_purple"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:fontFamily="@font/itim_regular"
+
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_description"
             tools:text="day" />
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="169dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/dark_purple"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_description"
-            tools:text="date" />
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_hourly_forecast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_card"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+       />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
