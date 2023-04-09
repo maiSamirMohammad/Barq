@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WeatherForecastDAO {
     @Query("SELECT * FROM weather_forecast LIMIT 1")
-    fun getCurrentWeathers(): Flow<WeatherForecast>?
+    fun getStoredWeatherForecast(): Flow<WeatherForecast>?
 
 
 
@@ -15,6 +15,5 @@ interface WeatherForecastDAO {
     suspend fun insertCurrentWeather(weatherForecast: WeatherForecast): Long
 
 
-    @Delete
-    suspend fun deleteCurrentWeather(weatherForecast: WeatherForecast): Int
+
 }

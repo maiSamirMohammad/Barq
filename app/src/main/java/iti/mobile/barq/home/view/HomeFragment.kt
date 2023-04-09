@@ -8,6 +8,9 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -16,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -34,8 +38,8 @@ import iti.mobile.barq.model.Constants
 import iti.mobile.barq.model.Repository
 import iti.mobile.barq.network.APIState
 import iti.mobile.barq.network.RemoteSource
-import iti.mobile.barq.utilities.ConnectivityObserver
-import iti.mobile.barq.utilities.NetworkConnectivityObserver
+
+
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -49,7 +53,6 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeViewModelFactory: HomeViewModelFactory
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var connectivityObserver: ConnectivityObserver
     private val locationCallback: LocationCallback =object : LocationCallback(){
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
@@ -94,109 +97,196 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getLastLocation()
-        connectivityObserver = NetworkConnectivityObserver(requireActivity().applicationContext)
-        connectivityObserver.observe().onEach {internetStatus ->
-            when(internetStatus){
-                ConnectivityObserver.Status.Available ->{
-                    Snackbar.make(activity?.window?.decorView!!.rootView, "Online", Snackbar.LENGTH_LONG)
-                        .setBackgroundTint(resources.getColor(android.R.color.holo_green_light))
-                        .show()
-                    Log.i("TAG", "the internet status is:$internetStatus ")
-                    lifecycleScope.launch {
-                        homeViewModel.currentWeatherForecast.collectLatest {apiResult ->
-                            when(apiResult)  {
-                                is APIState.Loading ->{
-                                    binding.progressBar.visibility= View.VISIBLE
-
-                                }
-                                is APIState.Success ->{
-                                    binding.progressBar.visibility= View.GONE
-                                    //get user address
-                                    val geoCoder= Geocoder(requireContext())
-                                    val currentArea= geoCoder.getFromLocation(apiResult.data.lat,apiResult.data.lon,1)
-                                    apiResult.data.countryName=
-                                        (currentArea?.get(0)?.countryName +", "+ currentArea?.get(0)?.adminArea)
-                                    binding.region.text=apiResult.data.countryName
 
 
-                                   val weatherIconUrl= resources.getString(
-                                        R.string.weather_icon_url,
-                                        apiResult.data.current.weather[0].icon
-                                    )
+    }
 
 
+    override fun onResume() {
+        super.onResume()
 
-                                    val imgUrl = context?.resources?.getString(R.string.weather_icon_url,
-                                        apiResult.data.current.weather[0].icon?.toString())
-                                    imgUrl.let {
-                                        binding.iconWeather.load(imgUrl) {
-                                            placeholder(R.drawable.loading_animation)
-                                            error(R.drawable.ic_broken_image)
-                                        }
+                if(isOnline(requireContext())){
+
+                        getLastLocation()
+                        Snackbar.make(activity?.window?.decorView!!.rootView, "Online", Snackbar.LENGTH_LONG)
+                            .setBackgroundTint(resources.getColor(android.R.color.holo_green_light))
+                            .show()
+
+                        lifecycleScope.launch {
+                            homeViewModel.currentWeatherForecast.collectLatest {apiResult ->
+                                when(apiResult)  {
+                                    is APIState.Loading ->{
+                                        binding.progressBar.visibility= View.VISIBLE
+
                                     }
-                                    binding.tvTemperature.text = resources.getString(
-                                        R.string.temperature_kelvin,
-                                        apiResult.data.current.temp.toString()
-                                    )
+                                    is APIState.Success ->{
+                                        binding.progressBar.visibility= View.GONE
+                                        //get user address
+                                        val geoCoder= Geocoder(requireContext())
+                                        val currentArea= geoCoder.getFromLocation(apiResult.data.lat,apiResult.data.lon,1)
+                                        apiResult.data.countryName=
+                                            (currentArea?.get(0)?.countryName +", "+ currentArea?.get(0)?.adminArea)
+                                        binding.region.text=apiResult.data.countryName
 
-                                    binding.tvDescription?.text =
-                                        apiResult.data.current.weather[0].description ?: resources.getString(
-                                            R.string.feels_like,
-                                            apiResult.data.current.feels_like.toString()
+
+                                        val weatherIconUrl= resources.getString(
+                                            R.string.weather_icon_url,
+                                            apiResult.data.current?.weather?.get(0)?.icon ?: "null"
                                         )
 
 
 
-                                    val dateAndTime: Long = apiResult.data.current.dt.toString().toLong()
-                                    val simpleDateAndTimeFormat = SimpleDateFormat("dd MMM yyyy HH:mm a")
-                                    val convertedDateAndTime=simpleDateAndTimeFormat.format(dateAndTime*1000)
-                                    binding.tvDateAndTime.text =convertedDateAndTime
-                                    binding.rvHourlyForecast.adapter = HourlyAdapter(apiResult.data.hourly, requireContext())
-                                    binding.rvDailyForecast.adapter = DailyAdapter(apiResult.data.daily, requireContext())
-                                    binding.rvDailyForecast.hasFixedSize()
+                                        val imgUrl = context?.resources?.getString(R.string.weather_icon_url,
+                                            apiResult.data.current?.weather?.get(0)?.icon?.toString())
+                                        imgUrl.let {
+                                            binding.iconWeather.load(imgUrl) {
+                                                placeholder(R.drawable.loading_animation)
+                                                error(R.drawable.ic_broken_image)
+                                            }
+                                        }
+                                        binding.tvTemperature.text = resources.getString(
+                                            R.string.temperature_kelvin,
+                                            apiResult.data.current?.temp.toString()
+                                        )
 
-                                    binding.humidityValue.text =  apiResult.data.current.humidity.toString() + "%"
-                                    binding.cloudsValue.text =  apiResult.data.current.clouds.toString() + "%"
-
-                                    binding.windValue.text = apiResult.data.current.wind_speed.toString() + " metre/sec"
-                                    binding.pressureValue.text = apiResult.data.current.pressure.toString() + " hPa"
-
-
+                                        binding.tvDescription?.text =
+                                            apiResult.data.current?.weather?.get(0)?.description ?: resources.getString(
+                                                R.string.feels_like,
+                                                apiResult.data.current?.feels_like.toString()
+                                            )
 
 
+
+                                        val dateAndTime: Long = apiResult.data.current?.dt.toString().toLong()
+                                        val simpleDateAndTimeFormat = SimpleDateFormat("dd MMM yyyy HH:mm a")
+                                        val convertedDateAndTime=simpleDateAndTimeFormat.format(dateAndTime*1000)
+                                        binding.tvDateAndTime.text =convertedDateAndTime
+                                        binding.rvHourlyForecast.adapter = apiResult.data.hourly?.let {
+                                            HourlyAdapter(
+                                                it, requireContext())
+                                        }
+                                        binding.rvDailyForecast.adapter = apiResult.data.daily?.let {
+                                            DailyAdapter(
+                                                it, requireContext())
+                                        }
+                                        binding.rvDailyForecast.hasFixedSize()
+
+                                        binding.humidityValue.text =  apiResult.data.current?.humidity.toString() + "%"
+                                        binding.cloudsValue.text =  apiResult.data.current?.clouds.toString() + "%"
+
+                                        binding.windValue.text = apiResult.data.current?.wind_speed.toString() + " metre/sec"
+                                        binding.pressureValue.text = apiResult.data.current?.pressure.toString() + " hPa"
+
+                                        //inset in database
+                                        homeViewModel.insertCurrentWeather(apiResult.data)
+
+                                    }
+                                    is APIState.Failure ->{
+                                        binding.progressBar.visibility= View.GONE
+                                        Log.e("TAG", "error==========:${apiResult.msg.message} ")
+                                        Snackbar.make(activity?.window?.decorView!!.rootView,
+                                            "Try another time as ${apiResult.msg.message}",
+                                            Snackbar.LENGTH_LONG)
+                                            .setBackgroundTint(resources.getColor(android.R.color.holo_orange_light))
+                                            .show()
+                                    }
                                 }
-                                is APIState.Failure ->{
-                                    binding.progressBar.visibility= View.GONE
-                                    Log.e("TAG", "error==========:${apiResult.msg.message} ")
-                                    Snackbar.make(activity?.window?.decorView!!.rootView,
-                                        "Try another time as ${apiResult.msg.message}",
-                                        Snackbar.LENGTH_LONG)
-                                        .setBackgroundTint(resources.getColor(android.R.color.holo_orange_light))
-                                        .show()
-                                }
+
                             }
-
                         }
-                    }
+
+                }else{
+
+                        Snackbar.make(activity?.window?.decorView!!.rootView, "Offline", Snackbar.LENGTH_LONG)
+                            .setBackgroundTint(resources.getColor(android.R.color.holo_red_light))
+                            .show()
+
+                        homeViewModel.getStoredWeatherForecast()
+
+                        lifecycleScope.launch {
+                            homeViewModel.lastWeatherForecast.collectLatest {apiResult ->
+                                when(apiResult)  {
+                                    is APIState.Loading ->{
+                                        binding.progressBar.visibility= View.VISIBLE
+
+                                    }
+                                    is APIState.Success ->{
+                                        binding.progressBar.visibility= View.GONE
+                                        //get user address
+                                        binding.region.text=apiResult.data.countryName
+
+
+                                        val weatherIconUrl= resources.getString(
+                                            R.string.weather_icon_url,
+                                            apiResult.data.current?.weather?.get(0)?.icon ?: "null"
+                                        )
+
+
+
+                                        val imgUrl = context?.resources?.getString(R.string.weather_icon_url,
+                                            apiResult.data.current?.weather?.get(0)?.icon?.toString())
+                                        imgUrl.let {
+                                            binding.iconWeather.load(imgUrl) {
+                                                placeholder(R.drawable.loading_animation)
+                                                error(R.drawable.ic_broken_image)
+                                            }
+                                        }
+                                        binding.tvTemperature.text = resources.getString(
+                                            R.string.temperature_kelvin,
+                                            apiResult.data.current?.temp.toString()
+                                        )
+
+                                        binding.tvDescription?.text =
+                                            apiResult.data.current?.weather?.get(0)?.description ?: resources.getString(
+                                                R.string.feels_like,
+                                                apiResult.data.current?.feels_like.toString()
+                                            )
+
+
+
+                                        val dateAndTime: Long = apiResult.data.current?.dt.toString().toLong()
+                                        val simpleDateAndTimeFormat = SimpleDateFormat("dd MMM yyyy HH:mm a")
+                                        val convertedDateAndTime=simpleDateAndTimeFormat.format(dateAndTime*1000)
+                                        binding.tvDateAndTime.text =convertedDateAndTime
+                                        binding.rvHourlyForecast.adapter = apiResult.data.hourly?.let {
+                                            HourlyAdapter(
+                                                it, requireContext())
+                                        }
+                                        binding.rvDailyForecast.adapter = apiResult.data.daily?.let {
+                                            DailyAdapter(
+                                                it, requireContext())
+                                        }
+                                        binding.rvDailyForecast.hasFixedSize()
+
+                                        binding.humidityValue.text =  apiResult.data.current?.humidity.toString() + "%"
+                                        binding.cloudsValue.text =  apiResult.data.current?.clouds.toString() + "%"
+
+                                        binding.windValue.text = apiResult.data.current?.wind_speed.toString() + " metre/sec"
+                                        binding.pressureValue.text = apiResult.data.current?.pressure.toString() + " hPa"
+
+                                        //inset in database
+                                        homeViewModel.insertCurrentWeather(apiResult.data)
+
+                                    }
+                                    is APIState.Failure ->{
+                                        binding.progressBar.visibility= View.GONE
+                                        Log.e("TAG", "error==========:${apiResult.msg.message} ")
+                                        Snackbar.make(activity?.window?.decorView!!.rootView,
+                                            "Try another time as ${apiResult.msg.message}",
+                                            Snackbar.LENGTH_LONG)
+                                            .setBackgroundTint(resources.getColor(android.R.color.holo_orange_light))
+                                            .show()
+                                    }
+                                }
+
+                            }
+                        }
 
                 }
-                else->{
-                    Snackbar.make(activity?.window?.decorView!!.rootView, "Offline", Snackbar.LENGTH_LONG)
-                        .setBackgroundTint(resources.getColor(android.R.color.holo_red_light))
-                        .show()
-                    Log.i("TAG", "the internet status is:$internetStatus ")
 
 
 
-
-                }
-            }
-
-        }.launchIn(lifecycleScope)
     }
-
-
 
     private fun checkPermissions():Boolean{
         return ActivityCompat.checkSelfPermission(requireContext(),
@@ -252,11 +342,22 @@ class HomeFragment : Fragment() {
     private fun requestNewLocationData(){
 
         val locationRequest= LocationRequest()
-//        locationRequest.setPriority()
         locationRequest.priority= LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval=0
 
         fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(requireContext())
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper())
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                return true
+            }
+        }
+        return false
     }
 }

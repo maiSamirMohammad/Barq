@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import iti.mobile.barq.model.Constants
 import iti.mobile.barq.model.IRepository
+import iti.mobile.barq.model.WeatherForecast
 import iti.mobile.barq.network.APIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,9 @@ class HomeViewModel(  private val _irepo: IRepository): ViewModel() {
 
     private var _currentWeatherForecast= MutableStateFlow<APIState>(APIState.Loading)
     val currentWeatherForecast= _currentWeatherForecast.asStateFlow()
+
+    private var _lastWeatherForecast= MutableStateFlow<APIState>(APIState.Loading)
+    val lastWeatherForecast= _lastWeatherForecast.asStateFlow()
 
 
     fun getCurrentWeather(
@@ -39,6 +43,24 @@ class HomeViewModel(  private val _irepo: IRepository): ViewModel() {
 
             }
 
+        }
+    }
+
+
+    fun insertCurrentWeather( weatherForecast: WeatherForecast){
+        viewModelScope.launch(Dispatchers.IO){
+            _irepo.insertCurrentWeather(weatherForecast)
+        }
+    }
+
+    fun getStoredWeatherForecast(){
+        viewModelScope.launch(Dispatchers.IO){
+            val storedWeatherForecast=_irepo.getStoredWeatherForecast()?.catch { e->
+                _lastWeatherForecast.value=APIState.Failure(e)
+            }?.collectLatest{ weatherForecast->
+                _lastWeatherForecast.value=APIState.Success(weatherForecast)
+
+            }
         }
     }
 }

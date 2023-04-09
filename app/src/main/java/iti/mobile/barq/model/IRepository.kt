@@ -10,4 +10,9 @@ interface IRepository {
         language: String ,
         unitOfMeasurement: String
     ): Flow<WeatherForecast>
+
+
+    suspend fun insertCurrentWeather(weatherForecast: WeatherForecast)
+
+    suspend fun getStoredWeatherForecast():Flow<WeatherForecast>?
 }

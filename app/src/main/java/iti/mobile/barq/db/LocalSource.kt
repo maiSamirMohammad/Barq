@@ -10,17 +10,15 @@ class LocalSource(var context: Context) : ILocalSource {
         val db:AppDataBase=AppDataBase.getInstance(context)
         db.weatherForecastDAO()
     }
-    override suspend fun deleteCurrentWeather(weatherForecast: WeatherForecast): Int {
-       return dao.deleteCurrentWeather(weatherForecast)
-    }
+
 
 
     override suspend fun insertCurrentWeather(weatherForecast: WeatherForecast): Long {
         return dao.insertCurrentWeather(weatherForecast)
     }
 
-    override suspend fun getCurrentWeathers(): Flow<WeatherForecast>? {
-        return dao.getCurrentWeathers()
+    override suspend fun getStoredWeatherForecast(): Flow<WeatherForecast>? {
+        return dao.getStoredWeatherForecast()
     }
 
 }
