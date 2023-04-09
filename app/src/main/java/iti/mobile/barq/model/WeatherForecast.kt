@@ -1,8 +1,13 @@
 package iti.mobile.barq.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(tableName = "weather_forecast")
 data class WeatherForecast (
-    val lat: Double,
-    val lon: Double,
+    @PrimaryKey val lat: Double,
+    @PrimaryKey val lon: Double,
     val timezone: String,
     val timezoneOffset: Long,
     val current: Current,

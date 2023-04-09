@@ -99,6 +99,9 @@ class HomeFragment : Fragment() {
         connectivityObserver.observe().onEach {internetStatus ->
             when(internetStatus){
                 ConnectivityObserver.Status.Available ->{
+                    Snackbar.make(activity?.window?.decorView!!.rootView, "Online", Snackbar.LENGTH_LONG)
+                        .setBackgroundTint(resources.getColor(android.R.color.holo_green_light))
+                        .show()
                     Log.i("TAG", "the internet status is:$internetStatus ")
                     lifecycleScope.launch {
                         homeViewModel.currentWeatherForecast.collectLatest {apiResult ->
@@ -179,7 +182,12 @@ class HomeFragment : Fragment() {
 
                 }
                 else->{
+                    Snackbar.make(activity?.window?.decorView!!.rootView, "Offline", Snackbar.LENGTH_LONG)
+                        .setBackgroundTint(resources.getColor(android.R.color.holo_red_light))
+                        .show()
                     Log.i("TAG", "the internet status is:$internetStatus ")
+
+
 
 
                 }
