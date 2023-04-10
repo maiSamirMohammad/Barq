@@ -48,5 +48,25 @@ class Repository private constructor(var localSource:ILocalSource,var remoteSour
         return localSource.getStoredWeatherForecast()
     }
 
+    override suspend fun getAlertByCompositeKey(
+        lat: Double,
+        lon: Double,
+        startDate: Long
+    ): Flow<Alert> {
+        return localSource.getAlertByCompositeKey(lat,lon,startDate)
+    }
+
+    override suspend fun getAlerts(): Flow<List<Alert>> {
+        return localSource.getAlerts()
+    }
+
+    override suspend fun insertAlert(alert: Alert): Long {
+        return localSource.insertAlert(alert)
+    }
+
+    override suspend fun deleteAlert(alert: Alert) {
+        return localSource.deleteAlert(alert)
+    }
+
 
 }

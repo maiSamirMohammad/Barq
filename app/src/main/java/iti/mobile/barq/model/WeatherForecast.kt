@@ -13,6 +13,7 @@ data class WeatherForecast (
     val current: Current?,
     val hourly: List<Current>?,
     val daily: List<Daily>?,
+    val alerts: List<Alert>?=null,
     var countryName:String?=null
 )
 
@@ -86,4 +87,15 @@ data class Temp (
     val night: Double,
     val eve: Double,
     val morn: Double
+)
+
+@Entity(tableName = "Alert",primaryKeys = ["startTime", "lat","lon"])
+class Alert(
+    var startTime: Long,
+    var endTime:Long,
+    var startDate: Long,
+    var endDate:Long,
+    var lat:Double,
+    var lon:Double,
+    var cityName:String
 )
