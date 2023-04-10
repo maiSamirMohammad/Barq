@@ -15,4 +15,16 @@ interface IRepository {
     suspend fun insertCurrentWeather(weatherForecast: WeatherForecast)
 
     suspend fun getStoredWeatherForecast():Flow<WeatherForecast>?
+
+    //alerts
+    suspend fun getAlertByCompositeKey(lat: Double, lon: Double, startDate: Long): Flow<Alert>
+
+
+    suspend fun getAlerts(): Flow<List<Alert>>
+
+
+    suspend fun insertAlert(alert: Alert): Long
+
+
+    suspend fun deleteAlert(alert: Alert)
 }
