@@ -38,8 +38,15 @@ class Repository private constructor(var localSource:ILocalSource,var remoteSour
         }
     }
 
+    override suspend fun insertCurrentWeather(weatherForecast: WeatherForecast) {
+        localSource.insertCurrentWeather(weatherForecast)
+    }
 
 
+
+    override suspend fun getStoredWeatherForecast(): Flow<WeatherForecast>? {
+        return localSource.getStoredWeatherForecast()
+    }
 
 
 }
