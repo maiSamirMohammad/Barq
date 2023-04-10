@@ -3,6 +3,7 @@ package iti.mobile.barq.db
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import iti.mobile.barq.model.Alert
 import iti.mobile.barq.model.Current
 import iti.mobile.barq.model.Daily
 import java.lang.reflect.Type
@@ -69,6 +70,26 @@ class DataConverter {
         val gson = Gson()
         val type: Type = object : TypeToken<List<Daily?>?>() {}.type
         return gson.fromJson(dailyString, type)
+    }
+
+    @TypeConverter
+    fun fromAlertList(alert: List<Alert?>?): String? {
+        if (alert == null) {
+            return null
+        }
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<Alert?>?>() {}.type
+        return gson.toJson(alert, type)
+    }
+
+    @TypeConverter
+    fun toAlertList(alertString: String?): List<Alert>? {
+        if (alertString == null) {
+            return null
+        }
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<Alert?>?>() {}.type
+        return gson.fromJson(alertString, type)
     }
 
 }
